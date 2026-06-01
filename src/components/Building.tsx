@@ -5,12 +5,12 @@ import { Edges, Html } from "@react-three/drei";
 import type { Room } from "@/lib/types";
 import { BUILDING, FLOOR_HEIGHT, floorBaseY } from "@/lib/layout";
 import { ROOM_COLOR } from "@/lib/client/visuals";
-import { useRyokan } from "@/lib/client/store";
+import { EMPTY, useRyokan } from "@/lib/client/store";
 
 const TOTAL_H = BUILDING.floors * FLOOR_HEIGHT;
 
 export function Building() {
-  const rooms = useRyokan((s) => s.state?.rooms ?? []);
+  const rooms = useRyokan((s) => s.state?.rooms ?? EMPTY);
 
   return (
     <group>

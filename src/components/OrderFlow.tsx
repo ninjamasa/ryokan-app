@@ -7,13 +7,13 @@ import * as THREE from "three";
 import type { Order } from "@/lib/types";
 import { KITCHEN_ID, standPos } from "@/lib/layout";
 import { PHASE_COLOR, PHASE_LABEL } from "@/lib/client/visuals";
-import { useRyokan } from "@/lib/client/store";
+import { EMPTY, useRyokan } from "@/lib/client/store";
 
 const FLY_MS = 1100; // 注文受付→厨房へ「瞬時に流れる」時間
 const LIFT = 1.7; // 床からの浮遊高さ
 
 export function OrderFlow() {
-  const orders = useRyokan((s) => s.state?.orders ?? []);
+  const orders = useRyokan((s) => s.state?.orders ?? EMPTY);
   return (
     <group>
       {orders.map((o) => (

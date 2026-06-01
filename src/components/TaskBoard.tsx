@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type CSSProperties } from "react";
-import { useRyokan } from "@/lib/client/store";
+import { EMPTY, useRyokan } from "@/lib/client/store";
 import { PHASE_COLOR, PHASE_LABEL } from "@/lib/client/visuals";
 import type { Order } from "@/lib/types";
 
@@ -13,8 +13,8 @@ const NEXT_ACTION: Partial<Record<Order["phase"], string>> = {
 };
 
 export function TaskBoard() {
-  const orders = useRyokan((s) => s.state?.orders ?? []);
-  const rooms = useRyokan((s) => s.state?.rooms ?? []);
+  const orders = useRyokan((s) => s.state?.orders ?? EMPTY);
+  const rooms = useRyokan((s) => s.state?.rooms ?? EMPTY);
   const advance = useRyokan((s) => s.advanceOrder);
   const setFocus = useRyokan((s) => s.setFocus);
   const [open, setOpen] = useState(true);

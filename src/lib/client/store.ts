@@ -3,6 +3,11 @@
 import { create } from "zustand";
 import type { OrderItem, RyokanEvent, RyokanState } from "@/lib/types";
 
+// セレクタのフォールバックで使う安定参照の空配列。
+// 毎回 `?? []` で新しい配列を作ると useSyncExternalStore が無限ループするため、
+// 同一参照を返す必要がある。
+export const EMPTY: never[] = [];
+
 export type Focus =
   | { kind: "room"; id: string }
   | { kind: "staff"; id: string }

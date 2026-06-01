@@ -6,11 +6,11 @@ import { Billboard, Html } from "@react-three/drei";
 import * as THREE from "three";
 import type { Guest, Staff } from "@/lib/types";
 import { ACTIVITY_COLOR, ACTIVITY_LABEL, ROLE_COLOR, ROLE_LABEL } from "@/lib/client/visuals";
-import { useRyokan } from "@/lib/client/store";
+import { EMPTY, useRyokan } from "@/lib/client/store";
 
 export function Markers() {
-  const staff = useRyokan((s) => s.state?.staff ?? []);
-  const guests = useRyokan((s) => s.state?.guests ?? []);
+  const staff = useRyokan((s) => s.state?.staff ?? EMPTY);
+  const guests = useRyokan((s) => s.state?.guests ?? EMPTY);
   return (
     <group>
       {staff.map((st) => (
