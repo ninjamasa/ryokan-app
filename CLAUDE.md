@@ -129,8 +129,11 @@ URL=http://localhost:3000/ node scripts/probe.mjs
 メッセージを表示し、`scripts/last-screenshot.png` にスクショを保存する。
 **画面が見えない環境で「ブラウザのエラーを見て直す」ときの第一手。**
 
-> ローカルで Claude にブラウザを直接操作させたい場合は、Chrome DevTools MCP / Playwright MCP
-> を `.mcp.json` で接続するのが本筋（"chrome mcp"）。未設定。必要なら追加する。
+> ローカルで Claude にブラウザを直接操作させたい場合は、**Chrome DevTools MCP** を
+> `.mcp.json` で接続済み（"chrome mcp"）。Claude Code 起動時に自動で読み込まれ、
+> ページのコンソール・スクショ・DOM を直接取得できる（初回は `npx` が
+> `chrome-devtools-mcp` を取得。ローカルの Chrome を使用）。
+> `npm run probe`（puppeteer）は MCP を使わない簡易フォールバック。
 
 ## 8. プロトタイプの割り切り / 既知の制約
 
@@ -148,7 +151,13 @@ URL=http://localhost:3000/ node scripts/probe.mjs
 - スタッフ視点の「配膳ディスプレイ / 厨房ディスプレイ」専用ビュー
 - 状態の永続化と複数旅館対応
 - アラート（満足度低下・タスク滞留・対応遅延）の可視化
-- Chrome系MCPの`.mcp.json`整備＋SessionStartフックで起動準備自動化
+
+## 11. 開発環境の自動準備（設定済み）
+
+- **`.mcp.json`** — Chrome DevTools MCP を接続（ブラウザのコンソール/スクショ/DOMを取得）。
+- **`.claude/hooks/session-start.sh` + `.claude/settings.json`** — SessionStart フック。
+  セッション開始時に `npm install` を実行し、依存が揃った状態で作業を始められる
+  （web/ローカル両対応・冪等）。デフォルトのブランチに取り込むと以降の全セッションで有効。
 
 ## 10. Git
 
