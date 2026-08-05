@@ -12,12 +12,13 @@
 //   # リダイレクトURIが「コードを表示」以外なら FREEE_REDIRECT_URI で上書き
 //   node scripts/freee-token.mjs
 //
-// 出力された access_token をそのまま請求書作成へ:
-//   export FREEE_ACCESS_TOKEN=（出力されたaccess_token）
-//   npm run invoice
+// 取得したトークンは .freee.json に保存され、以後は `npm run invoice` が
+// refresh_token で自動更新するのでブラウザ操作は不要になる（＝これは初回のみ実行）。
 //
 // client_id / client_secret は freee 開発者サイトのアプリ管理画面
 // （アプリ詳細 > 基本情報）で確認できます。
+
+import { persistToken, configPath } from "./freee-auth.mjs";
 
 const TOKEN_ENDPOINT = "https://accounts.secure.freee.co.jp/public_api/token";
 // 「コードを表示」タイプのアプリ（画面に認可コードが出るもの）はこの固定値。
@@ -66,15 +67,18 @@ if (!res.ok) {
   process.exit(1);
 }
 
+// client_id / client_secret も保存しておくと、以後 refresh_token で自動更新できる。
+persistToken(json, { client_id: clientId, client_secret: clientSecret });
+
 const expiresInMin = json.expires_in ? Math.round(json.expires_in / 60) : "?";
-console.log("✓ アクセストークンを取得しました");
+console.log("✓ アクセストークンを取得し、保存しました");
 console.log("─────────────────────────────────────────────");
-console.log(`  access_token  : ${json.access_token}`);
-console.log(`  refresh_token : ${json.refresh_token ?? "(なし)"}`);
+console.log(`  保存先        : ${configPath()}`);
+console.log(`  refresh_token : ${json.refresh_token ? "取得済み（以後は自動更新）" : "(なし)"}`);
 console.log(`  有効期限      : 約${expiresInMin}分（発行から）`);
 if (json.scope) console.log(`  scope         : ${json.scope}`);
 console.log("─────────────────────────────────────────────");
-console.log("\n次のコマンドで請求書を作成できます（有効期限内に実行してください）:");
-console.log(`  export FREEE_ACCESS_TOKEN=${json.access_token}`);
+console.log("\nこれ以降はブラウザ不要です。そのまま請求書を作成できます:");
 console.log("  DRY_RUN=1 npm run invoice   # 内容確認");
 console.log("  npm run invoice             # 下書き作成");
+console.log("\n（トークンが切れても refresh_token で自動更新します。再認可が必要なのは refresh_token 失効時＝約90日ごとだけ）");

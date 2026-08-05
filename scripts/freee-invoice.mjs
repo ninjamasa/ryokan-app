@@ -14,6 +14,11 @@
 //   まず内容だけ確認したい場合（APIを叩かない）:
 //   DRY_RUN=1 node scripts/freee-invoice.mjs
 //
+// トークンについて:
+//   初回だけ `npm run token`（ブラウザ認可）で refresh_token を保存すれば、
+//   以後はアクセストークンを自動更新するので FREEE_ACCESS_TOKEN の指定は不要。
+//   （環境変数 FREEE_ACCESS_TOKEN を指定した場合はそれを優先して使う）
+//
 // 主な環境変数（上書き用・すべて任意）:
 //   FREEE_PARTNER_NAME   取引先名（既定: 合同会社セイチ / 無ければ自動作成）
 //   FREEE_PARTNER_ID     取引先IDを直接指定（検索・作成をスキップ）
@@ -29,14 +34,13 @@
 //   freee アプリストア/開発者向けページでアプリを作成し OAuth2 でトークンを取得する。
 //   検証用途なら「アプリ管理 > 対象事業所 > テスト用アクセストークン」でも可。
 
+import { getAccessToken } from "./freee-auth.mjs";
+
 const BASE = "https://api.freee.co.jp";
-const TOKEN = process.env.FREEE_ACCESS_TOKEN;
 const DRY_RUN = process.env.DRY_RUN === "1" || process.env.DRY_RUN === "true";
 
-if (!TOKEN) {
-  console.error("✗ FREEE_ACCESS_TOKEN が未設定です。freeeのアクセストークンを環境変数で渡してください。");
-  process.exit(1);
-}
+// 環境変数のトークン優先、無ければ .freee.json の refresh_token で自動更新
+const TOKEN = await getAccessToken();
 
 // --- freee API 呼び出しヘルパー ---------------------------------------------
 async function freee(path, { method = "GET", body, query } = {}) {

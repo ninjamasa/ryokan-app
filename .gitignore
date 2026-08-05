@@ -24,6 +24,9 @@ yarn-error.log*
 .env*.local
 .env
 
+# freee 認証情報（アクセストークン / refresh_token）
+.freee.json
+
 # typescript
 *.tsbuildinfo
 
