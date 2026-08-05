@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "probe": "node scripts/probe.mjs"
+    "probe": "node scripts/probe.mjs",
+    "invoice": "node scripts/freee-invoice.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^10.0.0",
