@@ -9,7 +9,8 @@
     "start": "next start",
     "lint": "next lint",
     "probe": "node scripts/probe.mjs",
-    "invoice": "node scripts/freee-invoice.mjs"
+    "invoice": "node scripts/freee-invoice.mjs",
+    "token": "node scripts/freee-token.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^10.0.0",
